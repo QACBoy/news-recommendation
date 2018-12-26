@@ -29,13 +29,14 @@ public class IRegisterServiceImpl implements IRegisterService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        User users = userMapper.selectByUserName(loginRequest.getUsername());
+        User user = userMapper.selectByUserName(loginRequest.getUsername());
+        // User user = userMapper.selectByPrimaryKey(1);
         LoginResponse loginResponse = new LoginResponse();
         LoginVO loginVO = new LoginVO();
         loginResponse.setCode("200");
         loginResponse.setIsSuccess("true");
         loginResponse.setMsg("验证成功 ！");
-        loginVO.setUsername(loginRequest.getUsername());
+        loginVO.setUsername(user.getUsername());
         loginResponse.setData(loginVO);
         return loginResponse;
     }
@@ -44,6 +45,7 @@ public class IRegisterServiceImpl implements IRegisterService {
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         User user = new User();
         BeanUtils.copyProperties(signUpRequest, user);
+        user.setRemark("aha");
         userMapper.insert(user);
         SignUpResponse signUpResponse = new SignUpResponse();
         SignUpVO signUpVO = new SignUpVO();

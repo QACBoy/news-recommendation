@@ -1,17 +1,11 @@
 package com.hilkr.api.news.recommendation.client.dal.dao;
 
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hilkr.api.news.recommendation.client.dal.model.News;
+import org.apache.ibatis.annotations.Mapper;
 
-public interface NewsMapper {
-    int deleteByPrimaryKey(Integer id);
+@Mapper
+public interface NewsMapper extends BaseMapper<News> {
 
-    int insert(News record);
-
-    int insertSelective(News record);
-
-    News selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(News record);
-
-    int updateByPrimaryKey(News record);
 }

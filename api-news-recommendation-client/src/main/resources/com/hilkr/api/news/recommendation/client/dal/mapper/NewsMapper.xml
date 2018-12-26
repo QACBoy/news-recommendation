@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hilkr.api.news.recommendation.client.dal.dao.NewsMapper">
+  <resultMap id="BaseResultMap" type="com.hilkr.api.news.recommendation.client.dal.model.News">
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+  </resultMap>
+</mapper>
