@@ -3,6 +3,8 @@ package com.hilkr.api.news.recommendation.client.service.impl;
 import com.hilkr.api.news.recommendation.client.Utils.TokenUtils;
 import com.hilkr.api.news.recommendation.client.dal.dao.UserMapper;
 import com.hilkr.api.news.recommendation.client.dal.model.User;
+import com.hilkr.api.news.recommendation.client.enums.ResponseEnum;
+import com.hilkr.api.news.recommendation.client.enums.UserStateEnum;
 import com.hilkr.api.news.recommendation.client.request.CheckUserNameRequest;
 import com.hilkr.api.news.recommendation.client.request.LoginRequest;
 import com.hilkr.api.news.recommendation.client.request.SignUpRequest;
@@ -38,14 +40,13 @@ public class IRegisterServiceImpl implements IRegisterService {
         String username = loginRequest.getUsername();
         User user = userMapper.selectByUserName(username);
         if (user == null) {
-            // System.out.println("user 不存在");
-            log.info("user 不存在");
+            log.info("user: {} 不存在" , username);
             LoginResponse loginResponse = new LoginResponse();
-            LoginVO loginVO = new LoginVO();
-            loginResponse.setCode("404");
-            loginResponse.setIsSuccess("false");
-            loginResponse.setMsg("用户不存在");
-            loginResponse.setData(loginVO);
+            // LoginVO loginVO = new LoginVO();
+            loginResponse.setCode(UserStateEnum.USER_NOT_EXIST.getCode());
+            loginResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getCode());
+            loginResponse.setMsg(UserStateEnum.USER_NOT_EXIST.getMsg());
+            // loginResponse.setData(loginVO);
             return loginResponse;
         } else {
             String password = user.getPassword();
@@ -53,15 +54,18 @@ public class IRegisterServiceImpl implements IRegisterService {
             LoginResponse loginResponse = new LoginResponse();
             LoginVO loginVO = new LoginVO();
             if (TokenUtils.checkToken(username, password, token)) {
-                loginResponse.setCode("200");
-                loginResponse.setIsSuccess("true");
-                loginResponse.setMsg("验证成功 ！");
+                log.info("用户 {} 验证通过",username);
+                loginResponse.setCode(ResponseEnum.SUCCESS.getCode());
+                loginResponse.setIsSuccess(ResponseEnum.STATE_SUCCESS.getMsg());
+                loginResponse.setMsg(ResponseEnum.SUCCESS.getMsg());
                 loginVO.setUsername(user.getUsername());
                 loginResponse.setData(loginVO);
+            }else {
+                log.info("用户 {} 验证失败", username);
+                loginResponse.setCode(UserStateEnum.PASSWORD_ERROR.getCode());
+                loginResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getMsg());
+                loginResponse.setMsg(UserStateEnum.PASSWORD_ERROR.getMsg());
             }
-            loginResponse.setCode("403");
-            loginResponse.setIsSuccess("false");
-            loginResponse.setMsg("密码错误 ！");
             loginResponse.setData(loginVO);
             return loginResponse;
         }

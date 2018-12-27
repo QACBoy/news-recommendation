@@ -1,7 +1,11 @@
 package com.hilkr.api.news.recommendation.client.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hilkr.api.news.recommendation.client.Utils.JsonUtils;
 import com.hilkr.api.news.recommendation.client.request.LoginRequest;
+import com.hilkr.api.news.recommendation.client.response.LoginResponse;
 import com.hilkr.api.news.recommendation.client.service.IRegisterService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class IRegisterServiceImplTest {
 
     @Autowired
@@ -28,9 +33,14 @@ public class IRegisterServiceImplTest {
     @Test
     public void login() {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("hilkr3");
-        loginRequest.setPassword("hilkr");
-        iRegisterService.login(loginRequest);
+        loginRequest.setUsername("hilkr");
+        loginRequest.setPassword("0f640018b41d241c12c175f2c3c76726");
+        LoginResponse loginResponse = iRegisterService.login(loginRequest);
+        try {
+            log.info("返回的实体为：{} ",JsonUtils.obj2Json(loginResponse));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

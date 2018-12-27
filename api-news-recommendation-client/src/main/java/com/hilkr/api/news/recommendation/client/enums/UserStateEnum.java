@@ -13,12 +13,11 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum  ResponseEnum {
+public enum UserStateEnum {
 
-    SUCCESS("000","请求处理成功"),
-    LOGIN_FAILED("001","登录失败"),
-    STATE_SUCCESS("002","true"),
-    STATE_FAILED("003","false");
+    USER_NOT_EXIST("100","用户不存在"),
+    USERNAME_ALREADY_EXISTS("101","用户名已经存在"),
+    PASSWORD_ERROR("102","密码错误");
 
     String code;
     String msg;

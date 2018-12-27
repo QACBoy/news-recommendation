@@ -1,5 +1,6 @@
 package com.hilkr.api.news.recommendation.client.response;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.hilkr.api.news.recommendation.client.vo.LoginVO;
 import lombok.Getter;
 import lombok.Setter;

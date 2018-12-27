@@ -25,7 +25,7 @@ spring:
       validationInterval: 60000
       validationQuery: SELECT 1
 
-#mybatis
+#mybatis：https://mp.baomidou.com/config
 mybatis-plus:
   mapper-locations: classpath:/com/hilkr/api/news/recommendation/client/dal/mapper/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
@@ -45,6 +45,7 @@ mybatis-plus:
       #逻辑删除配置
       logic-delete-value: 0
       logic-not-delete-value: 1
+#      数据库类型,默认值为未知的数据库类型 如果值为OTHER,启动时会根据数据库连接 url 获取数据库类型;如果不是OTHER则不会自动获取数据库类型
       db-type: mysql
     #刷新mapper 调试神器
     refresh: true

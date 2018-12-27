@@ -3,8 +3,8 @@
 <configuration>
     <property name="logLevel" value="DEBUG"/>
     <property name="logPath" value="./logs/api-news-recommendation-client"/>
-    <property name="log.file.name" value="api-news-recommendation-client.log"/>
-    <property name="log.error.file.name" value="error.log"/>
+    <property name="log.file.name" value="./api-news-recommendation-client.log"/>
+    <property name="log.error.file.name" value="./error.log"/>
 
     <!-- 控制台日志 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -53,7 +53,6 @@
     <logger name="org.springframework" level="ERROR"/>
     <logger name="org.apache.http" level="ERROR"/>
     <logger name="com.netflix" level="ERROR"/>
-
     <root level="${logLevel}">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
