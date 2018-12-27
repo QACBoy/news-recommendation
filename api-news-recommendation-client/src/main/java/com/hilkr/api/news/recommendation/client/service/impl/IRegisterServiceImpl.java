@@ -13,6 +13,7 @@ import com.hilkr.api.news.recommendation.client.service.IRegisterService;
 import com.hilkr.api.news.recommendation.client.vo.CheckUserNameVO;
 import com.hilkr.api.news.recommendation.client.vo.LoginVO;
 import com.hilkr.api.news.recommendation.client.vo.SignUpVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
  * @date 2018/12/25
  *
  */
+@Slf4j
 @Service
 public class IRegisterServiceImpl implements IRegisterService {
 
@@ -36,7 +38,8 @@ public class IRegisterServiceImpl implements IRegisterService {
         String username = loginRequest.getUsername();
         User user = userMapper.selectByUserName(username);
         if (user == null) {
-            System.out.println("user 不存在");
+            // System.out.println("user 不存在");
+            log.info("user 不存在");
             LoginResponse loginResponse = new LoginResponse();
             LoginVO loginVO = new LoginVO();
             loginResponse.setCode("404");
