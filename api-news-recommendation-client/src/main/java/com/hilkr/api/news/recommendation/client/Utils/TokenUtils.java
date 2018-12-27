@@ -2,7 +2,6 @@ package com.hilkr.api.news.recommendation.client.Utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import sun.tools.jstat.Token;
 
 /***
  *

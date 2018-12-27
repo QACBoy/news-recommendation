@@ -2,9 +2,9 @@
 
 <configuration>
     <property name="logLevel" value="DEBUG"/>
-    <property name="logPath" value="./api-news-recommendation-client"/>
-    <property name="log.file.name" value="./api-news-recommendation-client/api-news-recommendation-client.log"/>
-    <property name="log.error.file.name" value="./api-news-recommendation-client/error.log"/>
+    <property name="logPath" value="./logs/api-news-recommendation-client"/>
+    <property name="log.file.name" value="api-news-recommendation-client.log"/>
+    <property name="log.error.file.name" value="error.log"/>
 
     <!-- 控制台日志 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
