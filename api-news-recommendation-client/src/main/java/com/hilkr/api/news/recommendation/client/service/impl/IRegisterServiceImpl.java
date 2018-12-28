@@ -1,10 +1,13 @@
 package com.hilkr.api.news.recommendation.client.service.impl;
 
-import com.hilkr.api.news.recommendation.client.Utils.TokenUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hilkr.api.news.recommendation.client.Utils.JsonUtil;
+import com.hilkr.api.news.recommendation.client.Utils.LoginKeyUtil;
+import com.hilkr.api.news.recommendation.client.Utils.TokenUtil;
 import com.hilkr.api.news.recommendation.client.dal.dao.UserMapper;
 import com.hilkr.api.news.recommendation.client.dal.model.User;
+import com.hilkr.api.news.recommendation.client.enums.RegisterEnum;
 import com.hilkr.api.news.recommendation.client.enums.ResponseEnum;
-import com.hilkr.api.news.recommendation.client.enums.UserStateEnum;
 import com.hilkr.api.news.recommendation.client.request.CheckUserNameRequest;
 import com.hilkr.api.news.recommendation.client.request.LoginRequest;
 import com.hilkr.api.news.recommendation.client.request.SignUpRequest;
@@ -37,34 +40,41 @@ public class IRegisterServiceImpl implements IRegisterService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
+        try {
+            log.info(" ****** 接收到的参数为：{} ", JsonUtil.obj2Json(loginRequest));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         String username = loginRequest.getUsername();
         User user = userMapper.selectByUserName(username);
         if (user == null) {
-            log.info("user: {} 不存在" , username);
+            log.info(" ****** 用户: {} 不存在！", username);
             LoginResponse loginResponse = new LoginResponse();
             // LoginVO loginVO = new LoginVO();
-            loginResponse.setCode(UserStateEnum.USER_NOT_EXIST.getCode());
-            loginResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getCode());
-            loginResponse.setMsg(UserStateEnum.USER_NOT_EXIST.getMsg());
+            loginResponse.setCode(RegisterEnum.USER_NOT_EXIST.getCode());
+            loginResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getMsg());
+            loginResponse.setMsg(RegisterEnum.USER_NOT_EXIST.getMsg());
             // loginResponse.setData(loginVO);
             return loginResponse;
         } else {
             String password = user.getPassword();
-            String token = loginRequest.getPassword();
+            String time = loginRequest.getTime();
+            String key = loginRequest.getKey();
             LoginResponse loginResponse = new LoginResponse();
             LoginVO loginVO = new LoginVO();
-            if (TokenUtils.checkToken(username, password, token)) {
-                log.info("用户 {} 验证通过",username);
+            if (LoginKeyUtil.checkLoginKey(username, password, time, key)) {
+                log.info(" ****** 用户：{} 验证通过！", username);
                 loginResponse.setCode(ResponseEnum.SUCCESS.getCode());
                 loginResponse.setIsSuccess(ResponseEnum.STATE_SUCCESS.getMsg());
                 loginResponse.setMsg(ResponseEnum.SUCCESS.getMsg());
                 loginVO.setUsername(user.getUsername());
+                loginVO.setToken(TokenUtil.generateToken(key));
                 loginResponse.setData(loginVO);
-            }else {
-                log.info("用户 {} 验证失败", username);
-                loginResponse.setCode(UserStateEnum.PASSWORD_ERROR.getCode());
+            } else {
+                log.info(" ****** 用户：{} 验证失败！", username);
+                loginResponse.setCode(RegisterEnum.PASSWORD_ERROR.getCode());
                 loginResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getMsg());
-                loginResponse.setMsg(UserStateEnum.PASSWORD_ERROR.getMsg());
+                loginResponse.setMsg(RegisterEnum.PASSWORD_ERROR.getMsg());
             }
             loginResponse.setData(loginVO);
             return loginResponse;
@@ -83,7 +93,7 @@ public class IRegisterServiceImpl implements IRegisterService {
             signUpResponse.setIsSuccess("true");
             signUpResponse.setMsg("用户注册成功！");
             signUpVO.setUsername(user.getUsername());
-        }catch (Exception e){
+        } catch (Exception e) {
             signUpResponse.setCode("402");
             signUpResponse.setIsSuccess("false");
             signUpResponse.setMsg("注册失败！");
@@ -103,7 +113,7 @@ public class IRegisterServiceImpl implements IRegisterService {
             checkUserNameResponse.setIsSuccess("true");
             checkUserNameResponse.setMsg("用户名验证通过！");
             checkUserNameVO.setIsExist(0);
-        }else{
+        } else {
             checkUserNameResponse.setCode("401");
             checkUserNameResponse.setIsSuccess("false");
             checkUserNameResponse.setMsg("用户名重复了！");

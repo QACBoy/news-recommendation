@@ -15,7 +15,7 @@ import java.io.IOException;
  * @date 2018/12/27
  *
  */
-public class JsonUtils {
+public class JsonUtil {
 
     public static Object json2Obj(Object obj,String jsonStr) throws JsonParseException, JsonMappingException, IOException {
         ObjectMapper mapper = new ObjectMapper();

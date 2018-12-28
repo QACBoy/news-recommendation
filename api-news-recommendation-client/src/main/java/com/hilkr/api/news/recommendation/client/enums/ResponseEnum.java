@@ -16,7 +16,7 @@ import lombok.Getter;
 public enum  ResponseEnum {
 
     SUCCESS("000","请求处理成功"),
-    LOGIN_FAILED("001","登录失败"),
+    FAILED("001","请求处理失败"),
     STATE_SUCCESS("002","true"),
     STATE_FAILED("003","false");
 

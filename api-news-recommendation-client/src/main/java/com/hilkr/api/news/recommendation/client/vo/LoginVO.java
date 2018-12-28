@@ -17,4 +17,6 @@ import lombok.ToString;
 @ToString
 public class LoginVO {
     private String username;
+    private String nickname;
+    private String token;
 }
