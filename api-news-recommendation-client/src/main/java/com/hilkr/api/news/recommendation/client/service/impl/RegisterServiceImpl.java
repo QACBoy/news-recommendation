@@ -1,10 +1,7 @@
 package com.hilkr.api.news.recommendation.client.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hilkr.api.news.recommendation.client.Utils.JsonUtil;
-import com.hilkr.api.news.recommendation.client.Utils.LoginKeyUtil;
-import com.hilkr.api.news.recommendation.client.Utils.Token;
-import com.hilkr.api.news.recommendation.client.Utils.TokenUtil;
+import com.hilkr.api.news.recommendation.client.Utils.*;
 import com.hilkr.api.news.recommendation.client.dal.dao.UserMapper;
 import com.hilkr.api.news.recommendation.client.dal.model.User;
 import com.hilkr.api.news.recommendation.client.enums.UserServiceEnum;
@@ -44,6 +41,11 @@ public class RegisterServiceImpl implements IRegisterService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
+        /*
+         * 1. 判断用户名是否存在
+         * 2. 通过用户名从数据库获取用户信息，生成 key
+         * 3. 通过前端传过来的 uesrname 和 key ( 前后端保持一致的生成的规则，两者进行比对 ) 进行验证账户的准确性
+         */
         try {
             log.info(" ###### [ RegisterServiceImpl-login:LoginResponse ] 接收到的参数为：{} ", JsonUtil.obj2Json(loginRequest));
         } catch (JsonProcessingException e) {
@@ -85,6 +87,11 @@ public class RegisterServiceImpl implements IRegisterService {
 
     @Override
     public AuthorizationResponse authorization(AuthorizationRequest authorizationRequest) {
+        /*
+         * 1. 校验 token 中的用户信息
+         * 2. 校验 token 是否失效
+         * 3. 在验证为有效 token 时，更新 token 的有效时间，重新回传
+         */
         try {
             log.info(" ###### [ RegisterServiceImpl-authorization:AuthorizationResponse ] 接收到的参数为：{} ", JsonUtil.obj2Json(authorizationRequest));
         } catch (JsonProcessingException e) {
@@ -133,21 +140,33 @@ public class RegisterServiceImpl implements IRegisterService {
 
     @Override
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
-        User user = new User();
-        BeanUtils.copyProperties(signUpRequest, user);
+        /*
+         * 1. 先判断一下用户名是否为空, 防止极端情况下的注册冲突
+         * 2. 通过前端检验完成的数据进行数据库的数据插入
+         */
+        String username =signUpRequest.getUsername();
         SignUpResponse signUpResponse = new SignUpResponse();
         SignUpVO signUpVO = new SignUpVO();
-        try {
-            userMapper.insert(user);
-            signUpResponse.setCode("200");
-            signUpResponse.setIsSuccess("true");
-            signUpResponse.setMsg("用户注册成功！");
-            signUpVO.setUsername(user.getUsername());
-        } catch (Exception e) {
-            signUpResponse.setCode("402");
-            signUpResponse.setIsSuccess("false");
-            signUpResponse.setMsg("注册失败！");
-            signUpVO.setUsername(user.getUsername());
+        User userCheck = userMapper.selectByUserName(username);
+        if (userCheck == null) {
+            User user = new User();
+            BeanUtils.copyProperties(signUpRequest, user);
+            user.setNickname(username);
+            try {
+                userMapper.insert(user);
+                signUpResponse.setCode(UserServiceEnum.SIGN_UP_SUCCESS.getCode());
+                signUpResponse.setIsSuccess(ResponseEnum.STATE_SUCCESS.getMsg());
+                signUpResponse.setMsg(UserServiceEnum.SIGN_UP_SUCCESS.getMsg());
+                signUpVO.setUsername(username);
+            } catch (Exception e) {
+                signUpResponse.setCode(ResponseEnum.FAILED.getCode());
+                signUpResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getMsg());
+                signUpResponse.setMsg(ResponseEnum.FAILED.getCode());
+            }
+        } else {
+            signUpResponse.setCode(UserServiceEnum.USERNAME_ALREADY_EXISTS.getCode());
+            signUpResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getMsg());
+            signUpResponse.setMsg(UserServiceEnum.USERNAME_ALREADY_EXISTS.getMsg());
         }
         signUpResponse.setData(signUpVO);
         return signUpResponse;
@@ -155,19 +174,22 @@ public class RegisterServiceImpl implements IRegisterService {
 
     @Override
     public CheckUserNameResponse checkUserName(CheckUserNameRequest checkUserNameRequest) {
-        User user = userMapper.selectByUserName(checkUserNameRequest.getUsername());
+        /*
+         * 1. 根据用户名查询，进行反馈
+         */
+        String username =checkUserNameRequest.getUsername();
+        User user = userMapper.selectByUserName(username);
         CheckUserNameResponse checkUserNameResponse = new CheckUserNameResponse();
         CheckUserNameVO checkUserNameVO = new CheckUserNameVO();
         if (user == null) {
-            checkUserNameResponse.setCode("200");
-            checkUserNameResponse.setIsSuccess("true");
-            checkUserNameResponse.setMsg("用户名验证通过！");
-            checkUserNameVO.setIsExist(0);
+            checkUserNameResponse.setCode(UserServiceEnum.USERNAME_ENABLE.getCode());
+            checkUserNameResponse.setIsSuccess(ResponseEnum.STATE_SUCCESS.getMsg());
+            checkUserNameResponse.setMsg(UserServiceEnum.USERNAME_ENABLE.getMsg());
+            checkUserNameVO.setUsername(username);
         } else {
-            checkUserNameResponse.setCode("401");
-            checkUserNameResponse.setIsSuccess("false");
-            checkUserNameResponse.setMsg("用户名重复了！");
-            checkUserNameVO.setIsExist(1);
+            checkUserNameResponse.setCode(UserServiceEnum.USERNAME_ALREADY_EXISTS.getCode());
+            checkUserNameResponse.setIsSuccess(ResponseEnum.STATE_FAILED.getMsg());
+            checkUserNameResponse.setMsg(UserServiceEnum.USERNAME_ALREADY_EXISTS.getMsg());
         }
         checkUserNameResponse.setData(checkUserNameVO);
         return checkUserNameResponse;

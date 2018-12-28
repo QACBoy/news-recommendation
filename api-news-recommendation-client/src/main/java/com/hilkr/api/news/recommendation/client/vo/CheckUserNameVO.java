@@ -16,5 +16,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CheckUserNameVO {
-    private Integer isExist;
+    private String username;
 }

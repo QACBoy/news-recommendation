@@ -24,4 +24,6 @@ public class SignUpRequest {
     private String tel;
 
     private String email;
+
+    // private String token;
 }

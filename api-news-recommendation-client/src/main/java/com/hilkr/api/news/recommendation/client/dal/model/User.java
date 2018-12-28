@@ -22,6 +22,8 @@ public class User extends BaseModel{
 
     private String email;
 
+    private String nickname;
+
     @Override
     protected Serializable pkVal() {
         return getId();

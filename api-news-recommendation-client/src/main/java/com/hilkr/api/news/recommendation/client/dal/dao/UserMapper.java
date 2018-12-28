@@ -5,11 +5,11 @@ import com.hilkr.api.news.recommendation.client.dal.model.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    int insert(User record);
-
     @Select("select * from user where username = #{username}")
-    User selectByUserName(String name);
+    User selectByUserName(String username);
 }

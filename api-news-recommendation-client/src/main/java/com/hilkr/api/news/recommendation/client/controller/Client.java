@@ -1,9 +1,11 @@
 package com.hilkr.api.news.recommendation.client.controller;
 
 import com.hilkr.api.news.recommendation.client.request.AuthorizationRequest;
+import com.hilkr.api.news.recommendation.client.request.CheckUserNameRequest;
 import com.hilkr.api.news.recommendation.client.request.LoginRequest;
 import com.hilkr.api.news.recommendation.client.request.SignUpRequest;
 import com.hilkr.api.news.recommendation.client.response.AuthorizationResponse;
+import com.hilkr.api.news.recommendation.client.response.CheckUserNameResponse;
 import com.hilkr.api.news.recommendation.client.response.LoginResponse;
 import com.hilkr.api.news.recommendation.client.response.SignUpResponse;
 import com.hilkr.api.news.recommendation.client.service.IRegisterService;
@@ -66,6 +68,11 @@ public class Client {
     @PostMapping(value = "/authorization")
     public AuthorizationResponse authorization(@RequestBody AuthorizationRequest authorizationRequest) {
         return iRegisterService.authorization(authorizationRequest);
+    }
+
+    @PostMapping(value = "/checkUserName")
+    public CheckUserNameResponse checkUserName(@RequestBody CheckUserNameRequest checkUserNameRequest){
+        return iRegisterService.checkUserName(checkUserNameRequest);
     }
 
 }
