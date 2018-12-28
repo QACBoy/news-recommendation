@@ -16,6 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class Token {
-    public String time;
-    public String key;
+    private String time;
+    private String username;
+    private String key;
 }

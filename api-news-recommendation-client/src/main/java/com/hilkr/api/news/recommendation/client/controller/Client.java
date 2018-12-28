@@ -1,7 +1,9 @@
 package com.hilkr.api.news.recommendation.client.controller;
 
+import com.hilkr.api.news.recommendation.client.request.AuthorizationRequest;
 import com.hilkr.api.news.recommendation.client.request.LoginRequest;
 import com.hilkr.api.news.recommendation.client.request.SignUpRequest;
+import com.hilkr.api.news.recommendation.client.response.AuthorizationResponse;
 import com.hilkr.api.news.recommendation.client.response.LoginResponse;
 import com.hilkr.api.news.recommendation.client.response.SignUpResponse;
 import com.hilkr.api.news.recommendation.client.service.IRegisterService;
@@ -60,4 +62,10 @@ public class Client {
     public SignUpResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         return iRegisterService.signUp(signUpRequest);
     }
+
+    @PostMapping(value = "/authorization")
+    public AuthorizationResponse authorization(@RequestBody AuthorizationRequest authorizationRequest) {
+        return iRegisterService.authorization(authorizationRequest);
+    }
+
 }
